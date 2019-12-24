@@ -1,26 +1,21 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {useSelector, useDispatch} from 'react-redux';
+import {lineDragStart,lineBeingDragged,lineDragEnd} from './actions';
 
-function App() {
+export default function App() {
+
+  const dispatch = useDispatch();
+  const lines = useSelector(state => state.manageLine.lines);
+
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    
+    <div>
+    <div onDragStart={(e) => dispatch(lineDragStart(e,"SIMPLE"))} onDrag={(e) => dispatch(lineBeingDragged(e,null,"SIMPLE"))} onDragEnd={(e) => dispatch(lineDragEnd(e,null,"SIMPLE"))}><h1>h</h1></div>
+    {lines.map(obj => (obj))}
+    
     </div>
   );
 }
-
-export default App;
