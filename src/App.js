@@ -12,10 +12,14 @@ export default function App() {
   
   return (
     
-    <div>
-    <div onDragStart={(e) => dispatch(lineDragStart(e,"SIMPLE"))} onDrag={(e) => dispatch(lineBeingDragged(e,null,"SIMPLE"))} onDragEnd={(e) => dispatch(lineDragEnd(e,null,"SIMPLE"))}><h1>h</h1></div>
+    <svg width={window.innerWidth} height={window.innerHeight}
+      onMouseDown ={(e) => dispatch(lineDragStart(e,"SIMPLE"))}
+       onMouseMove ={(e) => dispatch(lineBeingDragged(e,"SIMPLE"))}
+        onMouseUp ={(e) => dispatch(lineDragEnd(e,"SIMPLE"))} 
+        
+        >
     {lines.map(obj => (obj))}
     
-    </div>
+    </svg>
   );
 }
