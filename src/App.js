@@ -1,8 +1,8 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {useSelector, useDispatch} from 'react-redux';
-import {lineDragStart,lineBeingDragged,lineDragEnd} from './actions';
+import {lineDragStart,lineBeingDragged,onKeyPress} from './actions';
+import { Button } from 'react-bootstrap';
 
 export default function App() {
 
@@ -11,15 +11,20 @@ export default function App() {
 
   
   return (
-    
+    <div>
+      
+  <Button variant="primary" onClick={(e) => dispatch(onKeyPress(e))}>Delete</Button>
+  
     <svg width={window.innerWidth} height={window.innerHeight}
-      onMouseDown ={(e) => dispatch(lineDragStart(e,"SIMPLE"))}
+      onMouseUp={(e) => dispatch(lineDragStart(e,null,"SIMPLE"))}
        onMouseMove ={(e) => dispatch(lineBeingDragged(e,"SIMPLE"))}
-        onMouseUp ={(e) => dispatch(lineDragEnd(e,"SIMPLE"))} 
+        
         
         >
+    
     {lines.map(obj => (obj))}
     
     </svg>
+    </div>
   );
 }
