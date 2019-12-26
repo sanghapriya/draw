@@ -3,7 +3,7 @@ import GenericLine from '../components/genericLine.component';
 import {LINE_DRAG_START,LINE_BEING_DRAGGED,LINE_DRAG_END, ON_KEY_PRESS} from '../actions';
 import { act } from 'react-dom/test-utils';
 
-const initialState = {latestLineId:0,lines:[],lineDetails:[],isDraw:false,selected:null};
+const initialState = {latestLineId:0,lines:[],lineDetails:[],isDraw:false,selected:[]};
 
 function manageLineReducer(state = initialState,action) {
 
@@ -18,6 +18,7 @@ function manageLineReducer(state = initialState,action) {
                  return {
                         latestLineId:state.latestLineId,
                         isDraw:false,
+                        selected:state.selected,
                         lines:state.lines.map((line,index) => (index === latestLineId-1?
                                                                 <GenericLine          
                                                                 key = { latestLineId}
@@ -42,42 +43,43 @@ function manageLineReducer(state = initialState,action) {
                 
             if (typeof(action.e.target.x1) == "object")
             {
-                console.log(action.id);
+                
                 if(action.id === null){
-                    console.log(state)
+                    // console.log(state)
                     return state
                 }
                 else {
                         console.log("got an id")
-                        console.log(state.latestLineId)
+                        console.log(action.id)
+                        console.log(state)
                         return {
                             latestLineId:state.latestLineId,
                             isDraw:false,
-                            selected:action.id,
-                            lines:state.lines.map((line,index) => (index === latestLineId-1?
+                            selected:[...state.selected,action.id],
+                            lines:state.lines.map((line,index) => (index === action.id-1?
                                                                     <GenericLine          
-                                                                    key = { latestLineId}
-                                                                    id = { latestLineId}
-                                                                    color = "pink"
-                                                                    x1 = {state.lineDetails[latestLineId-1].x1}
-                                                                    y1 = {state.lineDetails[latestLineId-1].y1}
-                                                                    x2 = {action.e.clientX}
-                                                                    y2 = {action.e.clientY}
+                                                                    key = { action.id}
+                                                                    id = { action.id}
+                                                                    color = "blue"
+                                                                    x1 = {state.lineDetails[action.id-1].x1}
+                                                                    y1 = {state.lineDetails[action.id-1].y1}
+                                                                    x2 = {state.lineDetails[action.id-1].x2}
+                                                                    y2 = {state.lineDetails[action.id-1].y2}
                                                                     />:line)),
 
-                            lineDetails:state.lineDetails.map((lineDetail,index) => (index === latestLineId-1?
-                                                                                        {id:latestLineId,
-                                                                                        color: "pink",
-                                                                                        x1: state.lineDetails[latestLineId-1].x1,
-                                                                                        y1: state.lineDetails[latestLineId-1].y1,
-                                                                                        x2:action.e.clientX,
-                                                                                        y2:action.e.clientY}:lineDetail))
+                            lineDetails:state.lineDetails.map((lineDetail,index) => (index === action.id?
+                                                                                        {id:action.id,
+                                                                                        color: "blue",
+                                                                                        x1: state.lineDetails[action.id].x1,
+                                                                                        y1: state.lineDetails[action.id].y1,
+                                                                                        x2: state.lineDetails[action.id].x2,
+                                                                                        y2: state.lineDetails[action.id].y2,}:lineDetail))
                                                                                         };
 
                                                                             }
             
             }
-            
+            // New Line creation
             var latestLineId = state.latestLineId;
             var line = <GenericLine          key = { latestLineId+1}
                                                 id = { latestLineId+1}
@@ -99,6 +101,8 @@ function manageLineReducer(state = initialState,action) {
             };
 
             return {
+                ...state,
+                selected:state.selected,
                 latestLineId:state.latestLineId+1,
                 lines:[...state.lines,line],
                 lineDetails:[...state.lineDetails,lineDetails],
@@ -108,6 +112,7 @@ function manageLineReducer(state = initialState,action) {
         case LINE_BEING_DRAGGED:
             // console.log(state.lineDetails)
             action.e.persist();
+
             var latestLineId = state.latestLineId;
 
             if(state.isDraw & state.isDraw != null)
@@ -116,6 +121,7 @@ function manageLineReducer(state = initialState,action) {
                     return {
                         latestLineId:state.latestLineId,
                         isDraw:true,
+                        selected:state.selected,
                         lines:state.lines.map((line,index) => (index === latestLineId-1?
                                                                 <GenericLine          key = { latestLineId}
                                                                 id = { latestLineId}
@@ -146,6 +152,7 @@ function manageLineReducer(state = initialState,action) {
             return {
                 latestLineId:state.latestLineId,
                 isDraw:false,
+                selected:state.selected,
                 lines:state.lines.map((line,index) => (index === latestLineId-1?
                                                         <GenericLine          key = { latestLineId}
                                                         color = {"red"}
@@ -171,11 +178,13 @@ function manageLineReducer(state = initialState,action) {
                  return {
                     latestLineId:state.latestLineId,
                     isDraw:false,
-                    lines:state.lines.map((line,index) => (index === state.selected-1?
-                                                            <div key= {state.selected}></div>:line)),
+                    lines:state.lines.map((line,index) => (state.selected.includes(index+1)?
+                                                            <div key= {index+1}></div>:line)),
     
-                    lineDetails:state.lineDetails.map((lineDetail,index) => (index === latestLineId-1?
-                                                                                {}:lineDetail))
+                    lineDetails:state.lineDetails.map((lineDetail,index) => (state.selected.includes(index+1)?
+                                                                                {}:lineDetail)),
+
+                    selected:[]
                                                                                 };                                                          
                                                 
                  
