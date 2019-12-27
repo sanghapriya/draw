@@ -52,28 +52,53 @@ function manageLineReducer(state = initialState,action) {
                         console.log("got an id")
                         console.log(action.id)
                         console.log(state)
+     
                         return {
                             latestLineId:state.latestLineId,
                             isDraw:false,
-                            selected:[...state.selected,action.id],
+                            selected:state.selected.includes(action.id)? state.selected.filter((id) => (id !== action.id)):[...state.selected,action.id],
                             lines:state.lines.map((line,index) => (index === action.id-1?
-                                                                    <GenericLine          
-                                                                    key = { action.id}
-                                                                    id = { action.id}
-                                                                    color = "blue"
-                                                                    x1 = {state.lineDetails[action.id-1].x1}
-                                                                    y1 = {state.lineDetails[action.id-1].y1}
-                                                                    x2 = {state.lineDetails[action.id-1].x2}
-                                                                    y2 = {state.lineDetails[action.id-1].y2}
-                                                                    />:line)),
+                                                                        (state.selected.includes(action.id)?
+                                                                        <GenericLine          
+                                                                            key = { action.id}
+                                                                            id = { action.id}
+                                                                            color = "red"
+                                                                            x1 = {state.lineDetails[action.id-1].x1}
+                                                                            y1 = {state.lineDetails[action.id-1].y1}
+                                                                            x2 = {state.lineDetails[action.id-1].x2}
+                                                                            y2 = {state.lineDetails[action.id-1].y2}
+                                                                        />:
+                                                                        <GenericLine          
+                                                                            key = { action.id}
+                                                                            id = { action.id}
+                                                                            color = "blue"
+                                                                            x1 = {state.lineDetails[action.id-1].x1}
+                                                                            y1 = {state.lineDetails[action.id-1].y1}
+                                                                            x2 = {state.lineDetails[action.id-1].x2}
+                                                                            y2 = {state.lineDetails[action.id-1].y2}
+                                                                        />):
+                                                                        line)),
 
-                            lineDetails:state.lineDetails.map((lineDetail,index) => (index === action.id?
-                                                                                        {id:action.id,
-                                                                                        color: "blue",
-                                                                                        x1: state.lineDetails[action.id].x1,
-                                                                                        y1: state.lineDetails[action.id].y1,
-                                                                                        x2: state.lineDetails[action.id].x2,
-                                                                                        y2: state.lineDetails[action.id].y2,}:lineDetail))
+                            lineDetails:state.lineDetails.map((lineDetail,index) => (index === action.id-1?
+                                                                                        (state.selected.includes(action.id)?
+                                                                                            {   id:action.id,
+                                                                                                color: "red",
+                                                                                                x1: state.lineDetails[action.id-1].x1,
+                                                                                                y1: state.lineDetails[action.id-1].y1,
+                                                                                                x2: state.lineDetails[action.id-1].x2,
+                                                                                                y2: state.lineDetails[action.id-1].y2,
+                                                                                            }:
+
+                                                                                            {
+                                                                                                id:action.id,
+                                                                                                color: "blue",
+                                                                                                x1: state.lineDetails[action.id-1].x1,
+                                                                                                y1: state.lineDetails[action.id-1].y1,
+                                                                                                x2: state.lineDetails[action.id-1].x2,
+                                                                                                y2: state.lineDetails[action.id-1].y2,
+                                                                                            }):
+                                                                                        
+                                                                                        lineDetail))
                                                                                         };
 
                                                                             }
@@ -174,7 +199,7 @@ function manageLineReducer(state = initialState,action) {
                                                                     
 
         case ON_KEY_PRESS:
-                 
+                 action.e.persist();
                  return {
                     latestLineId:state.latestLineId,
                     isDraw:false,
