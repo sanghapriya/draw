@@ -3,6 +3,7 @@ export const LINE_DRAG_END = 'LINE_DRAG_END'
 export const LINE_BEING_DRAGGED = 'LINE_BEING_DRAGGED'
 export const LINE_SELECTED = 'LINE_SELECTED'
 export const ON_KEY_PRESS = 'ON_KEY_PRESS'
+export const ON_MENU_SELECT = 'ON_MENU_SELECT'
 
 
 export function lineDragStart(e,id,lineType) {
@@ -32,4 +33,9 @@ export function lineDragStart(e,id,lineType) {
   export function onKeyPress(e) {
   
     return {type: ON_KEY_PRESS,e}
+  }
+
+  export function onMenuSelect(menuOption) {
+  
+    return {type: ON_MENU_SELECT,menuOption}
   }
