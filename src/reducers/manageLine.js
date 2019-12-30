@@ -153,24 +153,53 @@ function manageLineReducer(state = initialState,action) {
 
                 case "Select":
                 {
+
+                    // Selection ends here
+                    // isDraw = false
+                    // Change color of the selected lines
+                    // destroy the selection box and coordinates
+
+
+
+
+
                     console.log(action.e.clientX)
                     if(state.isDraw & !isDraw){
                         return {
                             ...state,
                             isDraw:false,
-                            selectBox:<SelectBox          
-                                        x1 = {state.selectBoxDetail.x1}
-                                        y1 = {state.selectBoxDetail.y1}
-                                        x2 = {action.e.clientX}
-                                        y2 = {action.e.clientY} />,
-                            selectBoxDetail:
-                                        {
-                                            x1 : state.selectBoxDetail.x1,
-                                            y1 : state.selectBoxDetail.y1,
-                                            x2 : action.e.clientX,
-                                            y2 : action.e.clientY
+                            selected:state.lineDetails.filter((lineDetail,index) => 
+                                                                ((state.lineDetails[index].x1 >= state.selectBoxDetail.x1 &
+                                                                    state.lineDetails[index].y1 >= state.selectBoxDetail.y1)&
+                                                                    (action.e.clientX >= state.lineDetails[index].x2 &
+                                                                    action.e.clientY >= state.lineDetails[index].y2 )))
+                                                      .map((lineDetail) =>(lineDetail.id)),
 
-                                        }
+                            lines:state.lines.map((line,index) => ((state.lineDetails[index].x1 >= state.selectBoxDetail.x1 &
+                                                                    state.lineDetails[index].y1 >= state.selectBoxDetail.y1)&
+                                                                    (action.e.clientX >= state.lineDetails[index].x2 &
+                                                                     action.e.clientY >= state.lineDetails[index].y2 ))?
+                                                                        <GenericLine          
+                                                                            key = { index+1}
+                                                                            id = { index+1}
+                                                                            color = "blue"
+                                                                            x1 = {state.lineDetails[index].x1}
+                                                                            y1 = {state.lineDetails[index].y1}
+                                                                            x2 = {state.lineDetails[index].x2}
+                                                                            y2 = {state.lineDetails[index].y2}
+                                                                        />:
+                                                                        <GenericLine          
+                                                                        key = { index+1}
+                                                                        id = { index+1}
+                                                                        color = "red"
+                                                                        x1 = {state.lineDetails[index].x1}
+                                                                        y1 = {state.lineDetails[index].y1}
+                                                                        x2 = {state.lineDetails[index].x2}
+                                                                        y2 = {state.lineDetails[index].y2}
+                                                                    />),
+                            selectBox:[],
+                            selectBoxDetail:[]
+                                        
                                     }
                                 }
                     else{

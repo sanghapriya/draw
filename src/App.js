@@ -1,5 +1,5 @@
 import React from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {lineDragStart,lineBeingDragged,onKeyPress,onMenuSelect} from './actions';
 import { Button,ButtonToolbar, ButtonGroup,Dropdown,Container,Row,Col} from 'react-bootstrap';
