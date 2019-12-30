@@ -2,9 +2,37 @@ import React from 'react';
 import GenericLine from '../components/genericLine.component';
 import SelectBox from '../components/selectBox.component';
 import {LINE_DRAG_START,LINE_BEING_DRAGGED,LINE_DRAG_END, ON_KEY_PRESS,ON_MENU_SELECT} from '../actions';
-import { act } from 'react-dom/test-utils';
+
 
 const initialState = {latestLineId:0,lines:[],lineDetails:[],isDraw:false,selected:[],drawType:'Draw',selectBox:[],selectBoxDetail:[]};
+
+
+function getGenericLineElement(id,color,lineDetail){
+
+    return <GenericLine          
+                key = { id}
+                color = {color}
+                id = { id}
+                x1 = {lineDetail[id-1].x1}
+                y1 = {lineDetail[id-1].y1}
+                x2 = {lineDetail[id-1].x2}
+                y2 = {lineDetail[id-1].y2}
+                />
+}
+
+
+function getLineDetails(id,color,lineDetail){
+
+    return {id:id,
+        color:color,
+        x1: lineDetail[id-1].x1,
+        y1: lineDetail[id-1].y1,
+        x2: lineDetail[id-1].x2,
+        y2: lineDetail[id-1].y2}
+}
+
+
+
 
 function manageLineReducer(state = initialState,action) {
 
@@ -34,7 +62,7 @@ function manageLineReducer(state = initialState,action) {
                                     isDraw:false,
                                     selected:state.selected,
                                     lines:state.lines.map((line,index) => (index === latestLineId-1?
-                                                                            <GenericLine          
+                                                                            <GenericLine         
                                                                             key = { latestLineId}
                                                                             color = "blue"
                                                                             id = { latestLineId}
@@ -45,12 +73,13 @@ function manageLineReducer(state = initialState,action) {
                                                                             />:line)),
 
                                     lineDetails:state.lineDetails.map((lineDetail,index) => (index === latestLineId-1?
-                                                                                                {id:latestLineId,
-                                                                                                color:"blue",
-                                                                                                x1: state.lineDetails[latestLineId-1].x1,
-                                                                                                y1: state.lineDetails[latestLineId-1].y1,
-                                                                                                x2:action.e.clientX,
-                                                                                                y2:action.e.clientY}:lineDetail))
+                                                                                                    {id:latestLineId,
+                                                                                                        color:"blue",
+                                                                                                        x1: state.lineDetails[latestLineId-1].x1,
+                                                                                                        y1: state.lineDetails[latestLineId-1].y1,
+                                                                                                        x2:action.e.clientX,
+                                                                                                        y2:action.e.clientY}
+                                                                                                    :lineDetail))
                                                                                                 };
                             }
 
@@ -72,46 +101,15 @@ function manageLineReducer(state = initialState,action) {
                                         selected:state.selected.includes(action.id)? state.selected.filter((id) => (id !== action.id)):[...state.selected,action.id],
                                         lines:state.lines.map((line,index) => (index === action.id-1?
                                                                                     (state.selected.includes(action.id)?
-                                                                                    <GenericLine          
-                                                                                        key = { action.id}
-                                                                                        id = { action.id}
-                                                                                        color = "red"
-                                                                                        x1 = {state.lineDetails[action.id-1].x1}
-                                                                                        y1 = {state.lineDetails[action.id-1].y1}
-                                                                                        x2 = {state.lineDetails[action.id-1].x2}
-                                                                                        y2 = {state.lineDetails[action.id-1].y2}
-                                                                                    />:
-                                                                                    <GenericLine          
-                                                                                        key = { action.id}
-                                                                                        id = { action.id}
-                                                                                        color = "blue"
-                                                                                        x1 = {state.lineDetails[action.id-1].x1}
-                                                                                        y1 = {state.lineDetails[action.id-1].y1}
-                                                                                        x2 = {state.lineDetails[action.id-1].x2}
-                                                                                        y2 = {state.lineDetails[action.id-1].y2}
-                                                                                    />):
+                                                                                    getGenericLineElement(action.id,"red",state.lineDetails):
+                                                                                    getGenericLineElement(action.id,"blue",state.lineDetails)):
                                                                                     line)),
 
                                         lineDetails:state.lineDetails.map((lineDetail,index) => (index === action.id-1?
                                                                                                     (state.selected.includes(action.id)?
-                                                                                                        {   id:action.id,
-                                                                                                            color: "red",
-                                                                                                            x1: state.lineDetails[action.id-1].x1,
-                                                                                                            y1: state.lineDetails[action.id-1].y1,
-                                                                                                            x2: state.lineDetails[action.id-1].x2,
-                                                                                                            y2: state.lineDetails[action.id-1].y2,
-                                                                                                        }:
-
-                                                                                                        {
-                                                                                                            id:action.id,
-                                                                                                            color: "blue",
-                                                                                                            x1: state.lineDetails[action.id-1].x1,
-                                                                                                            y1: state.lineDetails[action.id-1].y1,
-                                                                                                            x2: state.lineDetails[action.id-1].x2,
-                                                                                                            y2: state.lineDetails[action.id-1].y2,
-                                                                                                        }):
-                                                                                                    
-                                                                                                    lineDetail))
+                                                                                                        getLineDetails(action.id,"red",state.lineDetails):
+                                                                                                        getLineDetails(action.id,"blue",state.lineDetails)
+                                                                                                        ):lineDetail))
                                                                                                     };
 
                                                                                         }
@@ -179,24 +177,9 @@ function manageLineReducer(state = initialState,action) {
                                                                     state.lineDetails[index].y1 >= state.selectBoxDetail.y1)&
                                                                     (action.e.clientX >= state.lineDetails[index].x2 &
                                                                      action.e.clientY >= state.lineDetails[index].y2 ))?
-                                                                        <GenericLine          
-                                                                            key = { index+1}
-                                                                            id = { index+1}
-                                                                            color = "blue"
-                                                                            x1 = {state.lineDetails[index].x1}
-                                                                            y1 = {state.lineDetails[index].y1}
-                                                                            x2 = {state.lineDetails[index].x2}
-                                                                            y2 = {state.lineDetails[index].y2}
-                                                                        />:
-                                                                        <GenericLine          
-                                                                        key = { index+1}
-                                                                        id = { index+1}
-                                                                        color = "red"
-                                                                        x1 = {state.lineDetails[index].x1}
-                                                                        y1 = {state.lineDetails[index].y1}
-                                                                        x2 = {state.lineDetails[index].x2}
-                                                                        y2 = {state.lineDetails[index].y2}
-                                                                    />),
+                                                                     getGenericLineElement(index+1,"blue",state.lineDetails):
+                                                                     getGenericLineElement(index+1,"red",state.lineDetails)
+                                                                    ),
                             selectBox:[],
                             selectBoxDetail:[]
                                         
@@ -237,7 +220,7 @@ function manageLineReducer(state = initialState,action) {
                 case "Draw":
                     {
 
-                            var latestLineId = state.latestLineId;
+                            latestLineId = state.latestLineId;
 
                             if(state.isDraw & state.isDraw != null)
                             {
@@ -306,7 +289,7 @@ function manageLineReducer(state = initialState,action) {
 
         case LINE_DRAG_END:
             console.log("Drag End at"+action.e.clientX+","+action.e.clientY)
-            var latestLineId = state.latestLineId;
+            latestLineId = state.latestLineId;
 
             return {
                 ...state,

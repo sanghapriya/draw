@@ -2,7 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useSelector, useDispatch} from 'react-redux';
 import {lineDragStart,lineBeingDragged,onKeyPress,onMenuSelect} from './actions';
-import { Button,ButtonToolbar, ButtonGroup,Dropdown,Container,Row,Col} from 'react-bootstrap';
+import { Button,ButtonToolbar, ButtonGroup,Dropdown,Row,Col} from 'react-bootstrap';
 
 export default function App() {
 
@@ -13,7 +13,8 @@ export default function App() {
 
   
   return (
-<Container>
+    <div>
+
   <Row>
     <Col> 
       <ButtonToolbar>
@@ -30,12 +31,12 @@ export default function App() {
     </ButtonToolbar>
     </Col>
   </Row>
-  <Row  >
+  <Row>
 
-    <Col 
-      > 
+    <Col> 
 
-      <svg width={window.innerWidth} height={window.innerHeight} onMouseDown={(e) => dispatch(lineDragStart(e,null,"SIMPLE"))}
+      <svg width={window.innerWidth} height={window.innerHeight} 
+      onMouseDown={(e) => dispatch(lineDragStart(e,null,"SIMPLE"))}
       onMouseMove ={(e) => dispatch(lineBeingDragged(e,"SIMPLE"))} >
     
       {lines.map(obj => (obj))}
@@ -45,6 +46,7 @@ export default function App() {
     </Col>
 
   </Row>
-</Container>
+
+</div>
   );
 }

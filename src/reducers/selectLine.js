@@ -1,5 +1,3 @@
-import React from 'react';
-import GenericLine from '../components/genericLine.component';
 import {LINE_SELECTED} from '../actions';
 
 
